@@ -51,9 +51,9 @@ const server = http.createServer((req, res) => {
         response_html.replace("$PLACEHOLDER1$",teacher_file[teacher_index][1]);
         let options = "";
         for(let i = 0; i < pupil_file.length; i++) {
-          options += `<select>${pupil_file[i][1]}</select>`;
+          options += `<option>${pupil_file[i][1]}</option>`;
         }
-        response_html.replace("$PLACEHOLDER2$",teacher_file[teacher_index][2]);
+        response_html.replace("$PLACEHOLDER2$",options);
         res.end(response_html);
       } else {
          res.end(fs.readFileSync("404.html"));
