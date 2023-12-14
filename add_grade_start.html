@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Кабінет вчителя</title>
-    <link rel="stylesheet" href="./style.css">
-
-</head>
-<body>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
     <p>Оберіть учня для редагування:</p>
 
     <form action="/add_grade_end" method="post">
-        <input type="text" name="teacherCode" id="teacherCode" hidden value="$PLACEHOLDER1$">
-        <select name="student" id="student">
-            $PLACEHOLDER2$
-        </select>
-        <!-- <select name="class" id="class">
-            $PLACEHOLDER3$
-        </select> -->
-        <input type="number" name="value" id="value" min="1" max="12">
-        <button type="submit">
-            Відправити
-        </button>
+      <input
+        type="text"
+        name="teacherCode"
+        id="teacherCode"
+        hidden
+        value="$PLACEHOLDER1$"
+      />
+      <input
+        type="text"
+        name="subjectCode"
+        id="subjectCode"
+        hidden
+        value="$PLACEHOLDER4$"
+      />
+      <select name="student" id="student" onchange="getPupilMarks(event)">
+        $PLACEHOLDER2$
+      </select>
+      <div id="grade_inputs"></div>
+      <!-- <input type="number" name="value" id="value" min="1" max="12" /> -->
+      <button type="submit">Відправити</button>
     </form>
 
-    <form action="/grades" method="get">
-
-    </form>
-</body>
+    <form action="/grades" method="get"></form>
+    <script>
+      const getPupilMarks = (event) => {
+        let p_i = event.target[event.target.selectedIndex].id;
+        let t_i = document.getElementById("subjectCode").value;
+        fetch("http://localhost:7777/pupil_marks", {
+          method: "POST",
+          body: JSON.stringify({ pupils_index: p_i, teachers_index: t_i }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            data = JSON.parse(data);
+            console.log(data);
+            const box = document.getElementById("grade_inputs");
+            while (box.firstChild) {
+              box.removeChild(box.firstChild);
+            }
+            for (let i = 0; i < data.length; i++) {
+              console.log(data);
+              const grade = Number(data[i]);
+              const input = document.createElement("input");
+              input.setAttribute("type", "number");
+              input.setAttribute("name", `grade${i}`);
+              input.setAttribute("id", `${i}`);
+              input.setAttribute("value", `${data[i]}`);
+              input.setAttribute("min", `1`);
+              input.setAttribute("max", `12`);
+              box.appendChild(input);
+              if (i % 2 !== 0) {
+                box.appendChild(document.createElement("br"));
+              }
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      };
+    </script>
+  </body>
 </html>
