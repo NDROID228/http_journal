@@ -78,7 +78,7 @@ const server = http.createServer((req, res) => {
         for(let i = 0; i < pupil_file.length; i++) {
           options += `<option>${pupil_file[i][1]}</option>`;
         }
-        response_html.replace("$PLACEHOLDER2$",options);
+        response_html = response_html.replace("$PLACEHOLDER2$",options);
         res.end(response_html);
       } else {
          res.end(fs.readFileSync("404.html"));
