@@ -48,12 +48,12 @@ const server = http.createServer((req, res) => {
         res.end(response_html);
       } else if(teacher_index !== -1) {
         let response_html = fs.readFileSync("add_grade_start.html").toString();
-        response_html.replace("$PLACEHOLDER1$",teacher_file[teacher_index][1]);
+        response_html = response_html.replace("$PLACEHOLDER1$",teacher_file[teacher_index][1]);
         let options = "";
         for(let i = 0; i < pupil_file.length; i++) {
           options += `<option>${pupil_file[i][1]}</option>`;
         }
-        response_html.replace("$PLACEHOLDER2$",options);
+        response_html = response_html.replace("$PLACEHOLDER2$",options);
         res.end(response_html);
       } else {
          res.end(fs.readFileSync("404.html"));
