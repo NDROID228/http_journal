@@ -1,0 +1,18 @@
+body {
+  background-color: #faedcd;
+  font-size: 25px;
+}
+table {
+  width: 500px;
+  min-height: 50px;
+  border-collapse: collapse;
+}
+tr,
+th,
+td {
+  border: 1px solid black;
+  height: 25px;
+}
+td {
+  padding-left: 5px;
+}
