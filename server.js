@@ -30,6 +30,7 @@ const server = http.createServer((req, res) => {
       const queryObject = url.parse(req.url, true).query;
       let code = queryObject.code;
 
+
       let pupil_file = isCodeEqual("pupils.txt");
       let teacher_file = isCodeEqual("teachers.txt");
      
@@ -46,10 +47,17 @@ const server = http.createServer((req, res) => {
         response_html = response_html.replace("$REPLACE1$", pupil_file[pupil_index][1]);
         res.end(response_html);
       } else if(teacher_index !== -1) {
-        res.end(fs.readFileSync("add_grade_start.html"));
-      } 
-    
-    //   res.end(fs.readFileSync("grades.html"));
+        let response_html = fs.readFileSync("add_grade_start.html").toString();
+        response_html.replace("$PLACEHOLDER1$",teacher_file[teacher_index][1]);
+        let options = "";
+        for(let i = 0; i < pupil_file.length; i++) {
+          options += `<select>${pupil_file[i][1]}</select>`;
+        }
+        response_html.replace("$PLACEHOLDER2$",teacher_file[teacher_index][2]);
+        res.end(response_html);
+      } else {
+         res.end(fs.readFileSync("404.html"));
+      }
       break;
     default:
       res.end(fs.readFileSync("404.html"));
