@@ -22,6 +22,7 @@ const server = http.createServer((req, res) => {
   console.log(`request: ${URL}`);
   switch (URL_header) {
     case "/":
+      res.setHeader("Content-Type", "text/html");
       res.end(fs.readFileSync("index.html"));
       break;
     case "/favicon.ico":
@@ -29,7 +30,9 @@ const server = http.createServer((req, res) => {
     case "/style.css":
       res.setHeader("Content-Type", "text/css");
       res.end(fs.readFileSync("style.css"));
+      break;
     case "/home":
+      res.setHeader("Content-Type", "text/html");
       const queryObject = url.parse(req.url, true).query;
       let code = queryObject.code;
 
@@ -63,6 +66,7 @@ const server = http.createServer((req, res) => {
       }
       break;
     default:
+      res.setHeader("Content-Type", "text/html");
       res.end(fs.readFileSync("404.html"));
       break;
   }
