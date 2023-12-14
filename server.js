@@ -5,6 +5,13 @@ const url = require("url");
 const hostname = "localhost";
 const port = 7777;
 
+function isCodeEqual(file) {
+  let file_info = fs.readFileSync(file).toString();
+  file_info = file_info.split("\n").map(v => v.split(","));
+  return file_info;
+}
+
+
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/html");
@@ -23,27 +30,29 @@ const server = http.createServer((req, res) => {
       const queryObject = url.parse(req.url, true).query;
       let code = queryObject.code;
 
-      let pupil_file = fs.readFileSync("pupils.txt").toString();
-      let teacher_file = fs.readFileSync("teachers.txt").toString();
-       pupil_file = pupil_file.split("\n").map(v => v.split(","));
-       teacher_file = teacher_file.split("\n").map(v => v.split(","));
-       let pupil_index = pupil_file.findIndex(v=>v[0]==code); // TODO: GUIDE FOR USAGE
-       let teacher_index = teacher_file.findIndex(v=>v[0]==code);
-      if (pupil_index !== undefined) {
+      let pupil_file = isCodeEqual("pupils.txt");
+      let teacher_file = isCodeEqual("teachers.txt");
+     
+      let pupil_index = pupil_file.findIndex(v=>v[0]==code); // TODO: GUIDE FOR USAGE
+      let teacher_index = teacher_file.findIndex(v=>v[0]==code);
+      console.log(pupil_index);
+      console.log(teacher_index);
+      if (pupil_index == -1 && teacher_index == -1) {
+        res.end(fs.readFileSync("404.html")); // TODO: proper 404.html
+      }
+      else if (pupil_index !== -1) {
         let response_html = fs.readFileSync("grades.html").toString();
         console.log(pupil_file);
-        response_html = response_html.replace("$REPLACE1$",pupil_file[pupil_index][1]);
+        response_html = response_html.replace("$REPLACE1$", pupil_file[pupil_index][1]);
         res.end(response_html);
-      } else if(teacher_index !== undefined) {
+      } else if(teacher_index !== -1) {
         res.end(fs.readFileSync("add_grade_start.html"));
-      } else {
-        res.end(`<h1> 404: Page is not found </h1>`); // TODO: proper 404.html
-      }
-
+      } 
+    
     //   res.end(fs.readFileSync("grades.html"));
       break;
     default:
-      res.end(`<h1> 404: Page is not found </h1>`);
+      res.end(fs.readFileSync("404.html"));
       break;
   }
 });
