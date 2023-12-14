@@ -1,3 +1,19 @@
+grades /GET
+
+pupilCode = string 
+&
+teacherCode = string|null
+
+add_grade_start /POST
+
+teacherCode = string
+
+add_grade_end /POST
+
+teacherCode = string
+pupilCode = string
+grade = number
+
 == журнал == 
 
 - страница ученика

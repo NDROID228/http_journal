@@ -29,13 +29,20 @@ const server = http.createServer((req, res) => {
        teacher_file = teacher_file.split("\n").map(v => v.split(","));
        let pupil_index = pupil_file.findIndex(v=>v[0]==code); // TODO: GUIDE FOR USAGE
        let teacher_index = teacher_file.findIndex(v=>v[0]==code);
-      if (pupil_index !== undefined) {
+      if (pupil_index !== -1) {
         let response_html = fs.readFileSync("grades.html").toString();
         console.log(pupil_file);
         response_html = response_html.replace("$REPLACE1$",pupil_file[pupil_index][1]);
         res.end(response_html);
-      } else if(teacher_index !== undefined) {
-        res.end(fs.readFileSync("add_grade_start.html"));
+      } else if(teacher_index !== -1) {
+        let response_html = fs.readFileSync("add_grade_start.html").toString();
+        response_html.replace("$PLACEHOLDER1$",teacher_file[teacher_index][1]);
+        let options = "";
+        for(let i = 0; i < pupil_file.length; i++) {
+          options += `<select>${pupil_file[i][1]}</select>`;
+        }
+        response_html.replace("$PLACEHOLDER2$",teacher_file[teacher_index][2]);
+        res.end(response_html);
       } else {
         res.end(`<h1> 404: Page is not found </h1>`); // TODO: proper 404.html
       }

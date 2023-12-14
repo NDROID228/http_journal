@@ -7,11 +7,23 @@
 </head>
 <body>
     <p>Оберіть предмет та учня для редагування:</p>
-    <select>
-        <option value="англ">англ</option>
-        <option value="матем">матем</option>
-        <option value="укр">укр</option>
+    <form action="/add_grade_end" method="post">
+        <input type="text" name="teacherCode" id="teacherCode" hidden value="$PLACEHOLDER1$">
+        <select name="student" id="student">
+            $PLACEHOLDER2$
+        </select>
+        <!-- <select name="class" id="class">
+            $PLACEHOLDER3$
+        </select> -->
+        <input type="number" name="value" id="value" min="1" max="12">
+        <button type="submit">
+            Відправити
+        </button>
+    </form>
 
-    </select>
+    <form action="/grades" method="get">
+
+    </form>
+
 </body>
 </html>
